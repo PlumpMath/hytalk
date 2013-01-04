@@ -4,6 +4,9 @@
     font-weight: 400;
 }
 
+.lisp, .python {
+    font-size:   0.6em;
+}
 
 .popover {
     position:       fixed;

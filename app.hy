@@ -12,11 +12,11 @@
 ;(import-from hy.lex.tokenize tokenize)
 ;(import codegen)
 
-(def lexers {"python" PythonLexer
-             "lisp" ClojureLexer})
+(def lexers {"python" (PythonLexer)
+             "lisp"   (ClojureLexer)})
 
 
-(def app (Flask "__main__"))
+(def app (Flask "__main__"))  ; long story, needed hack
 
 
 (decorate-with (.route app "/")
@@ -28,4 +28,4 @@
 (decorate-with (kwapply (.route app "/format/<language>") {"methods" ["POST"]})
   (defn format-code [language]
     " Language HTML Formatter "
-    (highlight (index request.form "code") (PythonLexer) (HtmlFormatter))))
+    (highlight (index request.form "code") (index lexers language) (HtmlFormatter))))

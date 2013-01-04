@@ -1,18 +1,16 @@
+function fmt_code(cls, typ) {
+    $(cls).each(function (i) {
+        var node = $(this),
+            input = node.html();
+
+        node.load('/format/' + typ, {
+            "code": input
+        });
+    });
+}
+
+
 $(document).ready(function() {
-
-    $(".lisp").each(function (i) {
-        var node = $(this),
-            input = node.html();
-        node.load('/format/lisp', {
-            "code": input
-        });
-    });
-
-    $(".python").each(function (i) {
-        var node = $(this),
-            input = node.html();
-        node.load('/format/python', {
-            "code": input
-        });
-    });
+    fmt_code(".lisp", "lisp");
+    fmt_code(".python", "python");
 })
