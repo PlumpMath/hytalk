@@ -5,7 +5,10 @@
         <meta name="viewport" content="width=1024" />
         <title>{% block title %}{% endblock %}</title>
         <meta name="author" content="Paul Tagliamonte" />
+
         <link href="/static/default.css" rel="stylesheet" />
+        <link href="/static/pygments.css" rel="stylesheet" />
+
         <link rel="shortcut icon" href="favicon.png" />
     </head>
     <body class="impress-not-supported">
@@ -19,6 +22,8 @@
 {% block slides %}
 {% endblock %}
         </div>
+        <script src="/static/jquery.js"></script>
+        <script src="/static/hyjack.js"></script>
         <script src="/static/impress.js"></script>
         <script>impress().init();</script>
     </body>
