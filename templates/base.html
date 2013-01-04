@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=1024" />
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="author" content="Paul Tagliamonte" />
+        <link href="/static/default.css" rel="stylesheet" />
+        <link rel="shortcut icon" href="favicon.png" />
+    </head>
+    <body class="impress-not-supported">
+        <div class = 'popover' >
+            <div class = 'fixie' id = 'popover' ></div>
+        </div>
+        <div class="fallback-message">
+            Sorry, this presentation needs a modern browser.
+        </div>
+        <div id="impress">
+{% block slides %}
+{% endblock %}
+        </div>
+        <script src="/static/jquery.js"></script>
+        <script src="/static/hyclick.js"></script>
+        <script src="/static/impress.js"></script>
+        <script>impress().init();</script>
+    </body>
+</html>
