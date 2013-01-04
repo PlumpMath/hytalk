@@ -2,6 +2,9 @@ $(document).ready(function() {
     var popshim = $(".popover");
 
     popshim.hide();
+    popshim.click(function (e) {
+        popshim.hide();
+    });
 
     $(".lisp").click(function (e) {
         var node  = $(e.target),
@@ -9,8 +12,7 @@ $(document).ready(function() {
             input = node.html();
 
         popo.load(
-            '/topy',
-            {
+            '/topy', {
                 "code": input
             },
             function (resT, resS, xhr) {

@@ -26,11 +26,16 @@
   (defn topy []
     " Take Lisp input and output formated HTML Pythonic output. "
     (do
+      (def source (index request.form "code"))
       (def code
          (.to-source codegen (forge-ast "stdin"
-           (tokenize (index request.form "code")))))
+           (tokenize source))))
       (+
-        "Pythonic Output of Lisp code"
+        "<h1>Original code</h1>"
+        source
+        "<br />"
+        "<br />"
+        "<h1>Pythonic Output of Lisp code</h1>"
         "<style>"
         (.get_style_defs (HtmlFormatter) ".highlight")
         "</style>"
