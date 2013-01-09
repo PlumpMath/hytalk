@@ -38,9 +38,60 @@
 
 
  -->
+<div class="step" data-x="5000" data-y="0" >
+    I really love Python. So much so, I don't really like using other
+    languages, since I always write API bindings (for my own projects)
+    in Python.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="6500" data-y="0" >
+    Thing is, I also really like Lisp. It's a pretty neat language.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="8000" data-y="0" >
+    So, might as well make them place nice, right?
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="8000" data-y="1000" >
+    So, I just spent my winter break hacking on Hy.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="6500" data-y="1000" >
+    Hy is a few things. It's a front-end "Lexer" (something that breaks
+    the code apart) and also a back-end Python AST generator.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="5000" data-y="1000" >
+    This means, I can (basically) convert Lisp expressions into
+    Python.
+</div>
+<!--
+
+
+
+ -->
 <div class="step" data-x="3000" data-y="1000" >
-    It's a fully-functional, extremely regular, &amp; simple. The language
-    is made up of so-called "s-expressions".
+    So, why Lisp?
 </div>
 <!--
 
@@ -48,6 +99,8 @@
 
  -->
 <div class="step" data-x="1500" data-y="1000" >
+    It's a fully-functional, extremely regular, &amp; simple. The language
+    is made up of so-called "s-expressions".
     S-expressions look something like:<br />
     <div class = 'lisp'>(foo bar (baz foo))</div>
 </div>
@@ -66,6 +119,16 @@
 
 
  -->
+<div class="step" data-rotate="90" data-x="-1500" data-y="1000" >
+    Some folks (such as myself) prefer the "look" of Lisp-style
+    languages, and it's commonly used in AI, so it's easier to "speak"
+    Lisp for some things.
+</div>
+<!--
+
+
+
+ -->
 <div class="step" data-x="0" data-y="2000" >
     If you were to write that in an s-expression, it'd look a bit like
     <div class = 'lisp' >(+ 1 1 2)</div>
@@ -75,7 +138,7 @@
 
 
  -->
-<div class="step" data-rotate="180" data-x="0" data-y="3500" >
+<div class="step wide-step" data-rotate="180" data-x="0" data-y="3500" >
     <div class = 'repl' >(+ 1 1 2)</div>
 </div>
 <!--
@@ -94,7 +157,7 @@
 
 
  -->
-<div class="step" data-rotate="180" data-x="1500" data-y="3500" >
+<div class="step wide-step" data-rotate="180" data-x="1500" data-y="3500" >
     <div class = 'repl' >(print [1 2 3 4 5])
 
 (print {"one" "onekey"
@@ -113,12 +176,93 @@
 
 
  -->
-<div class="step" data-rotate="180" data-x="3000" data-y="3500" >
+<div class="step wide-step" data-rotate="180" data-x="3000" data-y="3500" >
     <div class = 'repl' >(defn square-number [x]
+  "This is a (valid!) docstring"
   (* x x))
 
 ; and, you call it, like so:
 (print (square-number 3))</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="3000" data-y="5000" >
+    I added support for for-loops
+</div>
+<!--
+
+
+
+ -->
+<div class="step wide-step" data-rotate="180" data-x="3000" data-y="6500" >
+    <div class = 'repl' >(def my-list ["this" "is" "a" "test"])
+
+(for [x my-list]
+  (print x))
+</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="1500" data-y="5000" >
+    Imports, and index access work too
+</div>
+<!--
+
+
+
+ -->
+<div class="step wide-step" data-rotate="180" data-x="1500" data-y="6500" >
+    <div class = 'repl' >(import sys)
+
+(print (index sys.argv 1))
+</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="0" data-y="5000" >
+  Code branching also works pretty well.
+</div>
+<!--
+
+
+
+ -->
+<div class="step wide-step" data-rotate="180" data-x="0" data-y="6500" >
+    <div class = 'repl' >(if (== 1 2)
+  (print "This is the 'true' branch")
+  (print "This is the 'false' branch"))
+
+    </div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="0" data-y="8000" >
+    And, now, for some of the advanced type stuff it can do:
+</div>
+<!--
+
+
+
+ -->
+<div class="step wide-step" data-rotate="180" data-x="0" data-y="9500" >
+    <div class = 'repl' >(decorate-with foo (bar "baz")
+  (defn my-function [arg1]
+    " This is a decorated function "
+    (kwapply (.method-name obj arg1) {"kwarg1" "kwval1"})))
+
+(my-function "foo!")</div>
 </div>
 
 

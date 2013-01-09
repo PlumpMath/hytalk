@@ -80,16 +80,20 @@ a {
 
 .step {
     position: relative;
-    width: 900px;
-    padding: 40px;
-    margin: 20px auto;
+    width: 900px;  /* Adjust me? */
+    padding: 10px;
+    margin: 10px auto;
     -webkit-box-sizing: border-box;
     -moz-box-sizing:    border-box;
     -ms-box-sizing:     border-box;
     -o-box-sizing:      border-box;
     box-sizing:         border-box;
-    font-size: 48px;
+    font-size: 30px;
     line-height: 1.5;
+}
+
+.wide-step {
+    width: 1200px;  /* Adjust me? */
 }
 
 .impress-enabled .step {
