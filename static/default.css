@@ -120,3 +120,34 @@ pre.code {
 pre.output {
     font-size:      0.4em;
 }
+
+.repl-input {
+    border-right:   1px solid #DDDDDD;
+}
+
+.repl-input {
+    font-size:      20px;
+}
+
+.repl {
+    font-size:      20px;
+    height:         300px;
+}
+
+.repl .repl-left {
+    float:        left;
+}
+
+.repl .repl-right {
+    float:        right;
+}
+
+.repl .repl-pane { 
+    background-color:  #FFFFFF;
+    padding:      0px;
+    margin:       0px;
+    border:       0px solid #000000;
+    resize:       none;
+    width:        48%;
+    height:       99%;
+}
