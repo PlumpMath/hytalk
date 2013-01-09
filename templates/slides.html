@@ -23,7 +23,7 @@
 
  -->
 <div class="step" data-x="1500" data-y="0">
-    Lisp is a pretty great language. No, really.
+    Lisp is a pretty great language. (Really!)
 </div>
 <!--
 
@@ -83,7 +83,7 @@
 
 
  -->
-<div class="step" data-x="3000" data-y="2000" >
+<div class="step" data-x="1500" data-y="2000" >
     I also added lists and maps (dicts)
     <div class = 'lisp' >[1 2 3 4]</div>
 <div class = 'lisp' >{key1 value1
@@ -94,7 +94,7 @@
 
 
  -->
-<div class="step" data-rotate="180" data-x="3000" data-y="3500" >
+<div class="step" data-rotate="180" data-x="1500" data-y="3500" >
     <div class = 'repl' >(print [1 2 3 4 5])
 
 (print {"one" "onekey"
@@ -105,172 +105,20 @@
 
 
  -->
-<div class="step" data-x="4000" data-y="0" >
-    So, let's get back to code. Let's take a look at the same code in
-    Python and Lisp.
+<div class="step" data-x="3000" data-y="2000" >
+    You can even declare functions and stuff.
 </div>
 <!--
 
 
 
  -->
-<div class="step" data-x="5500" data-y="0" >
-    <div class = 'python' >foo(1)
-bar(2, 3, "Hello!")</div>
-    <div class = 'lisp' >(foo 1)
-(bar 2 3 "Hello!")</div>
-</div>
-<!--
+<div class="step" data-rotate="180" data-x="3000" data-y="3500" >
+    <div class = 'repl' >(defn square-number [x]
+  (* x x))
 
-
-
- -->
-<div class="step" data-x="7000" data-y="0" >
-    Simple code-branch
-    <div class = 'python' >if 1 == 1:
-    return x
-else:
-    return y
-    </div>
-    <div class = 'lisp' >(if (== 1 1)
-  x
-  y)</div>
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="8500" data-y="0" >
-    Function declaration
-
-    <div class = 'python' >def square(x):
-    return x * x</div>
-<div class = 'lisp' >(defn square [x]
-  (* x x))</div>
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="10000" data-y="0" >
-    Now, let's get down to work here.
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="4000" data-y="1000" >
-    Hy is a front-end lexer, and back-end Python AST generator.
-    <br />
-    <br />This is similar
-    to what Python does (internally) when it takes Python source, and turns
-    it into a .pyc (or imports a module)
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="5500" data-y="1000" >
-    AST (or an <b>A</b>bstract <b>S</b>yntax <b>T</b>ree) is how Python
-    represents Python code, inside Python.
-</div>
-<!--
-
-
-
- -->
- <div class="step" data-scale="0.4" data-x="5600" data-y="1075" >
-     (yo dawg)
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="7000" data-y="1000" >
-    It's pretty simple, but can be a bit overwhelming. Let's take a look at
-    some AST.
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="8500" data-y="1000" >
-    <div class = 'python' >foo()</div>
-    turns into the AST:
-    <div class = 'python' >Expr(
-    value=Call(
-        func=Name(
-            id='foo',
-            ctx=Load()
-        ),
-        args=[],
-        keywords=[],
-        starargs=None,
-        kwargs=None
-    )
-)</div>
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="10000" data-y="1000" >
-    <div class = 'python' >foo("bar")</div>
-    turns into the AST:
-    <div class = 'python' >Expr(
-    value=Call(
-        func=Name(
-            id='foo',
-            ctx=Load()
-        ),
-        args=[Str(s='bar')],
-        keywords=[],
-        starargs=None,
-        kwargs=None
-    )
-)</div>
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="4000" data-y="2000" >
-    <div class = 'python' >if True:
-    return True
-else:
-    return False</div>
-</div>
-<!--
-
-
-
- -->
-<div class="step" data-x="5500" data-y="2000" >
-    <div class = 'python' >If(
-   test=Name(
-       id='True',
-       ctx=Load()
-   ),
-   body=[
-       Return(
-           value=Name(
-               id='True',
-               ctx=Load()
-           ))],
-   orelse=[
-       Return(
-           value=Name(
-               id='False',
-               ctx=Load()
-            ))])</div>
+; and, you call it, like so:
+(print (square-number 3))</div>
 </div>
 
 
