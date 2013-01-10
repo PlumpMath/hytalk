@@ -394,6 +394,48 @@ We get the following AST:
     ],
     decorator_list=[])</div>
 </div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="3000" data-y="10000" >
+    Baiscally, my AST "compiler" just takes my parsed &amp; lexed Lisp,
+    and "renders" it out to a Python AST.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="1500" data-y="10000" >
+    So, given the following Hython:
+<div class = 'lisp' >(defn hello-world [x]
+  (print "Hello," x))</div>
+
+Hy produced the following Python AST:
+
+<div class = 'python' >FunctionDef(
+    name='hello_world',
+    args=arguments(args=[Name(id='x', ctx=Param())],
+        vararg=None, kwarg=None, defaults=[]),
+    body=[
+        Print(dest=None, values=[Str(s='Hello,'),
+            Name(id='x', ctx=Load())], nl=True)
+    ],
+    decorator_list=[])</div>
+(hint: It's the same!)
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="0" data-y="10000" >
+   <a href = 'https://github.com/paultag/hy/blob/master/hy/compiler/ast27.py' >The AST Generation code</a>
+   (warning, it's very very very ugly) (basically) consists of lots of special-cases,
+   and a few clever hacks to get the AST into a form Python can properly evaluate.
+</div>
 
 
 {#
