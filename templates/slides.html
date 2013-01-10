@@ -8,7 +8,7 @@
 
 
  -->
-<div class="step" data-x="0" data-y="0">
+<div class="step" data-scale="5" data-x="0" data-y="0">
     <center>
         <h1><a href = 'http://hy.pault.ag/' >Hy</a></h1>
         <h3>Lisp in Python</h3>
@@ -110,9 +110,11 @@
 
  -->
 <div class="step" data-x="0" data-y="1000" >
-    All maths is done in Polish notation (that is to say,
-    <pre>1 + 1 + 2</pre> is written as
-    <pre>+ 1 1 2</pre>
+    Some folks (such as myself) prefer the "look" of Lisp-style
+    languages, and it's commonly used in AI, so it's easier to "speak"
+    Lisp for some things.<br />
+    <br />
+    Also, Macros. Sweet, sweet macros.
 </div>
 <!--
 
@@ -120,9 +122,10 @@
 
  -->
 <div class="step" data-rotate="90" data-x="-1500" data-y="1000" >
-    Some folks (such as myself) prefer the "look" of Lisp-style
-    languages, and it's commonly used in AI, so it's easier to "speak"
-    Lisp for some things.
+    I should also note that in Lisp, everything's done in Polish
+    notation (that is to say,
+    <pre>1 + 1 + 2</pre> is written as
+    <pre>+ 1 1 2</pre>
 </div>
 <!--
 
@@ -263,6 +266,133 @@
     (kwapply (.method-name obj arg1) {"kwarg1" "kwval1"})))
 
 (my-function "foo!")</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="1500" data-y="8000" >
+    Given the following code block:
+
+<div class = 'lisp' >(def foo [1 2 3 4])
+(print (index foo 100))  ; out of bounds</div>
+
+    Even more magic, like proper tracebacks, totally work.
+
+<div class = 'python' >Traceback (most recent call last)
+  File "frob.hy", line 4, in module
+    (print (index foo 100))  ; out of bounds
+IndexError</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="1500" data-y="9500" >
+    Even imports (really!) work. Hy can import Python as if it were lisp, and
+    Python can import Hy as if it were Python.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="3000" data-y="9500" >
+    Hy can do this via some newish magic, via
+    <a href = 'http://www.python.org/dev/peps/pep-0302/' >PEP 302</a> and
+    some clever hackery.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="4500" data-y="9500" >
+    PEP 302 allows for "New Import Hooks", which basically were intended to
+    be used to search non-standard places (like the Internet, in one example)
+    if the module isn't on the Python path.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="6000" data-y="9500" >
+    Baiscally, my
+    <a href = 'https://github.com/paultag/hy/blob/master/hy/lang/importer.py#L19' >meta-importer</a>
+    (as it's called) just searches the normal
+    sys.path for modules and packages ending with .hy, just like the
+    built-in stuff searches for .py (or .pyc, etc). The loader-class is then
+    appended to sys.meta_path.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="7500" data-y="9500" >
+    If it finds a .hy file, the lexer and AST translation routine(s) kick in,
+    and insert a completely fake AST into sys.modules, then returns it back
+    out.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="9000" data-y="9500" >
+    Which is, yes, amazing. PEP 302 is pretty much the coolest thing, like,
+    ever.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="9000" data-y="10000" >
+   But, wait! Paul! You totally glossed over the AST stuff! Talk more about
+   that!
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="7500" data-y="10000" >
+    ASTs (or Abstract Syntax Trees) are the <i>internal</i> representation
+    if Python code.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="6000" data-y="10000" >
+    They can get pretty fugly, but they're extremely powerful. Basically, this
+    means that Python (like Lisp before it, for the record) can
+    <b>programmatically</b> alter itself.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="4500" data-y="10000" >
+Given the following Python:
+<div class = 'python' >def hello_world(x):
+    print "Hello,", x</div>
+We get the following AST:
+<div class = 'python' >FunctionDef(
+    name='hello_world',
+    args=arguments(args=[Name(id='x', ctx=Param())],
+        vararg=None, kwarg=None, defaults=[]),
+    body=[
+        Print(dest=None, values=[Str(s='Hello,'),
+            Name(id='x', ctx=Load())], nl=True)
+    ],
+    decorator_list=[])</div>
 </div>
 
 
