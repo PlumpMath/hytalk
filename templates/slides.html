@@ -351,6 +351,68 @@ IndexError</div>
 
 
  -->
+<div class="step" data-rotate="180" data-x="10500" data-y="9500" >
+    The importer consists of two parts, the Importer and the Finder.
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-rotate="180" data-x="12000" data-y="9500" >
+    The finder is in charge of finding the file to import, and returns
+    a Loader object that is able to load that file into sys.modules. The
+    function looks a bit like:
+    <div class = 'python' >finder.find_module(fullname, path=None)</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="12000" data-y="10000" >
+    The Loader object (which the finder returned up above) can be then invoked
+    (and is) with the module name (something like foo.bar.baz), and looks
+    a bit like:
+    <div class = 'python' >loader.load_module(fullname)</div>
+</div>
+<!--
+
+
+
+ -->
+<div class="step" data-x="10500" data-y="10000" >
+The importer basically looks like:
+    <div class = 'python' >class MetaImporter(HyFinder):
+    def find_module(self, fullname, path=None):
+        pth = self.find_on_path(fullname)
+        if pth is None:
+            return
+        return MetaLoader()
+    </div>
+And the finder basically looks like:
+<div class = 'python' >class MetaLoader(HyFinder):
+    def load_module(self, fullname):
+        # [snip]
+        mod = _hy_import_file(pth, fullname)
+        ispkg = self.is_package(fullname)
+        mod.__file__ = pth
+        mod.__loader__ = self
+        mod.__name__ = fullname
+        if ispkg:
+            mod.__path__ = []
+            mod.__package__ = fullname
+        else:
+            mod.__package__ = fullname.rpartition('.')[0]
+        sys.modules[fullname] = mod
+        return mod
+</div>
+</div>
+<!--
+
+
+
+ -->
 <div class="step" data-x="9000" data-y="10000" >
    But, wait! Paul! You totally glossed over the AST stuff! Talk more about
    that!
@@ -427,20 +489,11 @@ Hy produced the following Python AST:
 (hint: It's the same!)
 </div>
 <!--
-
-
-
- -->
 <div class="step" data-x="0" data-y="10000" >
    <a href = 'https://github.com/paultag/hy/blob/master/hy/compiler/ast27.py' >The AST Generation code</a>
    (warning, it's very very very ugly) (basically) consists of lots of special-cases,
    and a few clever hacks to get the AST into a form Python can properly evaluate.
 </div>
-<!--
-
-
-
- -->
 <div class="step" data-x="0" data-y="11500" >
     Now, for my twist ending:<br />
     <br />
@@ -449,7 +502,229 @@ Hy produced the following Python AST:
     <br />
     Yes, that's right. <i>awesome.</i>
 </div>
+ -->
+<div class="step" data-x="0" data-y="10000" >
+    So, how does it work? Good question!
+</div>
+<!--
 
+
+
+-->
+<div class="step" data-x="0" data-y="11000" >
+    Basically, my internal Lexed Objects (stuff like HYExpression, HYString,
+    HYBool, HYList, etc) get passed to my AST Generator's "render" method,
+    and get passed to one of a few methods depending on it's type. (helps
+    keep things clear).
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-x="1000" data-y="11000" >
+    Let's start simple -- the String generator:
+    <div class = 'python' >
+# [snip]
+import ast
+# [snip]
+    def render_string(self, node):
+        # (node is a string, in this case)
+        return ast.Str(s=str(node))
+# [snip]
+    </div>
+    Which produces (when given "foo!") the following block:
+    <div class = 'python' >Str(s='foo!')</div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-x="2000" data-y="11000" >
+    OK, let's get more advanced here, the List render-er.
+    <div class = 'python' >
+# [snip]
+import ast
+# [snip]
+    def render_list(self, node):
+        ret = []
+        for c in node:
+            ret.append(self.render(c))
+        return ast.List(elts=ret, ctx=ast.Load())
+# [snip]
+    </div>
+    Which produces (when given [1, 2, "foo"]) the following block:
+    <div class = 'python' >List(elts=[Num(n=1), Num(n=2), Str(s='foo')], ctx=Load())</div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-x="3000" data-y="11000" >
+    Alright, let's move up to Dicts (slighty more hackey)
+    <div class = 'python' >
+    def render_map(self, node):
+        keys = []
+        values = []
+        for key in node:
+            keys.append(self.render(key))
+            values.append(self.render(node[key]))
+        return ast.Dict(keys=keys, values=values)
+    </div>
+    Which produces (when given {"one": "oneval", "two": "twoval"})
+    the following block:
+    <div class = 'python' >Dict(
+    keys=[Str(s='one'), Str(s='two')],
+    values=[Str(s='oneval'), Str(s='twoval')]
+)</div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-x="4000" data-y="11000" >
+    Now, here's the Symbol generator:
+    <div class = 'python' >
+    def render_symbol(self, node):
+        # (node is a string, in this case)
+        if "." in node:
+            glob, local = node.rsplit(".", 1)
+            ret = ast.Attribute(
+                value=self.render_symbol(glob),
+                attr=str(local),
+                ctx=ast.Load()
+            )
+            return ret
+        return ast.Name(id=str(node), ctx=ast.Load())
+    </div>
+    It produces something like (for "foo"):
+    <div class = 'python' >Name(id='foo', ctx=Load())</div>
+    Or (for "foo.bar"):
+    <div class = 'python' >Attribute(value=Name(id='foo', ctx=Load()),
+    attr='bar', ctx=Load())</div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-x="5000" data-y="11000" >
+    In addition to the basics, we also need to render expressions (function
+    calls, etc), and friends.
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="5000" data-y="12000" >
+    <div class = 'python' >def render_expression(self, node):
+        # node is a list, like ['fn', 'arg', 'arg', 'arg']
+
+        inv = node.get_invocation()
+        if inv['function'] in self.native_cases:
+            return self.native_cases[inv['function']](node)
+
+        for key in self.startswith:
+            if inv['function'].startswith(key):
+                return self.startswith[key](node)
+
+        c = []
+        for child in node.get_children():
+            c.append(self.render(child))
+
+        if inv['function'] in special_cases:
+            return special_cases[inv['function']](node, c, self)
+
+        ret = value=ast.Call(
+                func=self.render_symbol(inv['function']),
+                args=c,
+                keywords=[],
+                starargs=None,
+                kwargs=None
+        )
+        return ret</div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="4000" data-y="12000" >
+    Defining a function
+<div class = 'python' >
+    def _defn(self, node):
+        inv = node.get_invocation()
+        args = inv['args']
+        name = args.pop(0)
+        sig = args.pop(0)
+        doc = None
+        for child in args:
+            c.append(self.render(child))
+        cont = c[-1]
+        body = cont if isinstance(cont, list) else [cont]
+        ret = ast.FunctionDef(
+            name=str(name),
+            args=ast.arguments(
+                args=[
+                    ast.Name(arg=str(x), id=str(x), ctx=ast.Param()) for x in sig
+                ],
+                vararg=None,
+                kwarg=None,
+                kwonlyargs=[],
+                kw_defaults=[],
+                defaults=[]
+            ),
+            body=body,
+            decorator_list=[])
+        return ret
+    </div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="3000" data-y="12000" >
+    Let's look at:
+<div class = 'python' >def square(number):
+    return number * number</div>
+
+    Which produces this:
+    <div class = 'python' >
+FunctionDef(
+    name='square',
+    args=arguments(
+        args=[Name(id='number', ctx=Param())],
+        vararg=None,
+        kwarg=None,
+        defaults=[]
+    ),
+    body=[
+        Return(
+            value=BinOp(
+                left=Name(id='number', ctx=Load()),
+                op=Mult(),
+                right=Name(id='number', ctx=Load())
+            )
+        )
+    ],
+    decorator_list=[]
+)
+    </div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="2000" data-y="12000" >
+    Phew! Ok, that was a lot. Before we get too much further, are there
+    questions on ASTs?
+</div>
 
 {#
 <!--
