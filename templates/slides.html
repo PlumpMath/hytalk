@@ -722,6 +722,36 @@ FunctionDef(
 
 -->
 <div class="step" data-rotate="180" data-x="2000" data-y="12000" >
+    Now, for how that decorator magic works:
+    (remember, a FunctionDef looks like:)
+    <div class = 'python' >ast.FunctionDef(
+    name=str(name),
+    args=ast.arguments(
+        # [snip]
+    ),
+    body=body,
+    decorator_list=[]
+)
+    </div>
+
+So, our decorate "macro" in Python does the following:
+
+    <div class = 'python' >def _ast_decorate(self, node):
+        i = node.get_invocation()
+        c = i['args']
+        meth = c.pop(-1)
+        fn = self.render(meth)
+        for child in c:
+            fn.decorator_list.append(self.render(child))
+        return fn
+    </div>
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="1000" data-y="12000" >
     Phew! Ok, that was a lot. Before we get too much further, are there
     questions on ASTs?
 </div>
