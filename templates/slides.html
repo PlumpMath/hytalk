@@ -752,8 +752,51 @@ So, our decorate "macro" in Python does the following:
 
 -->
 <div class="step" data-rotate="180" data-x="1000" data-y="12000" >
-    Phew! Ok, that was a lot. Before we get too much further, are there
-    questions on ASTs?
+    Alright. Now that we've got ASTs down pat, let's move on to what
+    we actually <b>do</b> with the AST after we're done.
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="180" data-x="0" data-y="12000" >
+    The AST is converted to code via the built-in compile() function.
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="0" data-x="0" data-y="13000" >
+    the compile() function takes an AST (or just plain Python), a filename,
+    and a "mode" (what to do with it), and returns a code object.
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="0" data-x="1000" data-y="13000" >
+    That code object is then passed to eval(), to let the Pyton VM evaluate
+    (and actually run!) the code.
+</div>
+<!--
+
+
+
+-->
+<div class="step" data-rotate="0" data-x="2000" data-y="13000" >
+    The forge_module bits (which take Hython and evaulate it into
+    a Python module fit for use in sys.modules) looks like:
+
+    <div class = 'python' >def forge_module(name, fpath, forest):
+    mod = imp.new_module(name)
+    mod.__file__ = fpath
+    ast = forge_ast(name, forest)  # lex, produce AST
+    eval(compile(ast, fpath, "exec"), mod.__dict__)  # compile, produce module
+    return mod
+</div>
 </div>
 
 {#
