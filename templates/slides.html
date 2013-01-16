@@ -23,7 +23,7 @@
 
  -->
 <div class="step" data-x="1500" data-y="0">
-    Lisp is a pretty great language. (Really!)
+    Lisp is a pretty great language. (no, really!)
 </div>
 <!--
 
@@ -39,7 +39,7 @@
 
  -->
 <div class="step" data-x="5000" data-y="0" >
-    I really love Python. So much so, I don't really like using other
+    I also really love Python. So much so, I don't really like using other
     languages, since I always write API bindings (for my own projects)
     in Python.
 </div>
@@ -49,7 +49,9 @@
 
  -->
 <div class="step" data-x="6500" data-y="0" >
-    Thing is, I also really like Lisp. It's a pretty neat language.
+    Thing is, I also really like Lisp (in particular, Clojure).
+    It's a pretty neat language full of some powerful ideas. It's a language
+    steeped in culture, and the de-facto language of AI.
 </div>
 <!--
 
@@ -91,7 +93,7 @@
 
  -->
 <div class="step" data-x="3000" data-y="1000" >
-    So, why Lisp?
+    Why Lisp?
 </div>
 <!--
 
@@ -122,8 +124,8 @@
 
  -->
 <div class="step" data-rotate="90" data-x="-1500" data-y="1000" >
-    I should also note that in Lisp, everything's done in Polish
-    notation (that is to say,
+    Before we go on, I should also note for the non-Lispers that in Lisp,
+    everything's done in Polish notation &mdash; that is to say,
     <pre>1 + 1 + 2</pre> is written as
     <pre>+ 1 1 2</pre>
 </div>
@@ -184,6 +186,8 @@
   "This is a (valid!) docstring"
   (* x x))
 
+(def foo 2)
+
 ; and, you call it, like so:
 (print (square-number 3))</div>
 </div>
@@ -193,7 +197,9 @@
 
  -->
 <div class="step" data-x="3000" data-y="5000" >
-    I added support for for-loops
+    I added support for for-loops (some academics may prefer recusion with
+    TCO (tail call optimization), but Python has good for loops, so this
+    ends up faster and easier on RAM.)
 </div>
 <!--
 
@@ -252,7 +258,8 @@
 
  -->
 <div class="step" data-x="0" data-y="8000" >
-    And, now, for some of the advanced type stuff it can do:
+    And, now, for some of the advanced type stuff it can do (for the
+    hardcore lispians)
 </div>
 <!--
 
@@ -292,7 +299,7 @@ IndexError</div>
  -->
 <div class="step" data-rotate="180" data-x="1500" data-y="9500" >
     Even imports (really!) work. Hy can import Python as if it were lisp, and
-    Python can import Hy as if it were Python.
+    Python can import Hy as if it were Python (after Hy is shimed in)
 </div>
 <!--
 
@@ -364,6 +371,7 @@ IndexError</div>
     a Loader object that is able to load that file into sys.modules. The
     function looks a bit like:
     <div class = 'python' >finder.find_module(fullname, path=None)</div>
+    where "fullname" is something like <code>os.path</code>
 </div>
 <!--
 
@@ -372,9 +380,9 @@ IndexError</div>
  -->
 <div class="step" data-x="12000" data-y="10000" >
     The Loader object (which the finder returned up above) can be then invoked
-    (and is) with the module name (something like foo.bar.baz), and looks
-    a bit like:
+    and is expected to have the following signature:
     <div class = 'python' >loader.load_module(fullname)</div>
+    (where "fullname" is again, something like <code>os.path</code>)
 </div>
 <!--
 
@@ -462,8 +470,8 @@ We get the following AST:
 
  -->
 <div class="step" data-x="3000" data-y="10000" >
-    Baiscally, my AST "compiler" just takes my parsed &amp; lexed Lisp,
-    and "renders" it out to a Python AST.
+    Baiscally, Hy acts as an AST "compiler" just takes the parsed &amp;
+    lexed Lisp, and "renders" it out to a Python AST.
 </div>
 <!--
 
@@ -471,11 +479,12 @@ We get the following AST:
 
  -->
 <div class="step" data-x="1500" data-y="10000" >
-    So, given the following Hython:
+    To demystify some of what Hy is doing, let's take the following Hython
+    (lisp) expression:
 <div class = 'lisp' >(defn hello-world [x]
   (print "Hello," x))</div>
 
-Hy produced the following Python AST:
+And check out the generated AST back in Python-land.
 
 <div class = 'python' >FunctionDef(
     name='hello_world',
@@ -486,25 +495,16 @@ Hy produced the following Python AST:
             Name(id='x', ctx=Load())], nl=True)
     ],
     decorator_list=[])</div>
-(hint: It's the same!)
+(hint: It's the same as that last slide!)
 </div>
 <!--
+
+
+
+-->
 <div class="step" data-x="0" data-y="10000" >
-   <a href = 'https://github.com/paultag/hy/blob/master/hy/compiler/ast27.py' >The AST Generation code</a>
-   (warning, it's very very very ugly) (basically) consists of lots of special-cases,
-   and a few clever hacks to get the AST into a form Python can properly evaluate.
-</div>
-<div class="step" data-x="0" data-y="11500" >
-    Now, for my twist ending:<br />
-    <br />
-    The flask app running backend for these slides (color bits, repl) is totally
-    implemented in Hy.<br />
-    <br />
-    Yes, that's right. <i>awesome.</i>
-</div>
- -->
-<div class="step" data-x="0" data-y="10000" >
-    So, how does it work? Good question!
+    Alright, so we've got ASTs, let's check out how the internals of Hy work
+    to generate the AST from Lexed Lisp
 </div>
 <!--
 
@@ -512,10 +512,10 @@ Hy produced the following Python AST:
 
 -->
 <div class="step" data-x="0" data-y="11000" >
-    Basically, my internal Lexed Objects (stuff like HYExpression, HYString,
-    HYBool, HYList, etc) get passed to my AST Generator's "render" method,
+    Basically, hy internal Lexed Objects (stuff like HYExpression, HYString,
+    HYBool, HYList, etc) get passed to Hy's AST Generator's "render" method,
     and get passed to one of a few methods depending on it's type. (helps
-    keep things clear).
+    keep things clear and neat, well, as neat as they can be).
 </div>
 <!--
 
@@ -554,7 +554,7 @@ import ast
         return ast.List(elts=ret, ctx=ast.Load())
 # [snip]
     </div>
-    Which produces (when given [1, 2, "foo"]) the following block:
+    Which produces (when given <code>[1, 2, "foo"]</code>) the following block:
     <div class = 'python' >List(elts=[Num(n=1), Num(n=2), Str(s='foo')], ctx=Load())</div>
 </div>
 <!--
@@ -573,7 +573,7 @@ import ast
             values.append(self.render(node[key]))
         return ast.Dict(keys=keys, values=values)
     </div>
-    Which produces (when given {"one": "oneval", "two": "twoval"})
+    Which produces (when given <code>{"one": "oneval", "two": "twoval"}</code>)
     the following block:
     <div class = 'python' >Dict(
     keys=[Str(s='one'), Str(s='two')],
@@ -689,7 +689,8 @@ import ast
 
 -->
 <div class="step" data-rotate="180" data-x="3000" data-y="12000" >
-    Let's look at:
+    Now, let's go back and look at another bit of generated
+    AST off Lisp -- let's look at:
 <div class = 'python' >def square(number):
     return number * number</div>
 
@@ -736,7 +737,8 @@ FunctionDef(
 
 So, our decorate "macro" in Python does the following:
 
-    <div class = 'python' >def _ast_decorate(self, node):
+    <div class = 'python' >
+    def _ast_decorate(self, node):
         i = node.get_invocation()
         c = i['args']
         meth = c.pop(-1)
@@ -752,8 +754,9 @@ So, our decorate "macro" in Python does the following:
 
 -->
 <div class="step" data-rotate="180" data-x="1000" data-y="12000" >
-    Phew! Ok, that was a lot. Before we get too much further, are there
-    questions on ASTs?
+    Phew! Ok, that was a lot. Before I show you some stuff on the Terminal,
+    are there any questions on ASTs or how Hy is generating some of these
+    Pythonic objects?
 </div>
 
 {#
