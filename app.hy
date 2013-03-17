@@ -8,9 +8,9 @@
 (import-from pygments.lexers PythonLexer ClojureLexer)
 (import-from pygments.formatters HtmlFormatter)
 
-(import-from hy.compiler.ast27 forge-ast)
-(import-from hy.lex.tokenize tokenize)
-(import codegen)
+(import-from hy.importer import-string-to-ast)
+(import astor.codegen)
+(import autopep8)
 
 (def lexers {"python" (PythonLexer)
              "lisp"   (ClojureLexer)})
@@ -26,28 +26,27 @@
 
 
 (defn colorize-python [x]
-  (highlight x (index lexers "python") (HtmlFormatter)))
+  (highlight x (get lexers "python") (HtmlFormatter)))
 
 
 (defn hy-to-py [hython]
-  (.to_source codegen
-    (forge-ast "stdin" (tokenize hython))))
+  (.to_source astor.codegen (import-string-to-ast hython)))
 
 
 (decorate-with (kwapply (.route app "/format/<language>") {"methods" ["POST"]})
   (defn format-code [language]
     "Language HTML Formatter"
     (highlight
-      (index request.form "code") (index lexers language) (HtmlFormatter))))
+      (get request.form "code") (get lexers language) (HtmlFormatter))))
 
 
 (decorate-with (kwapply (.route app "/hy2py") {"methods" ["POST"]})
   (defn translate-code []
     "Pythonic converter"
-    (hy-to-py (index request.form "code"))))
+    (hy-to-py (get request.form "code"))))
 
 
 (decorate-with (kwapply (.route app "/hy2pycol") {"methods" ["POST"]})
   (defn translate-code-with-color []
     "Pythonic converter"
-    (colorize-python (hy-to-py (index request.form "code")))))
+    (colorize-python (hy-to-py (get request.form "code")))))

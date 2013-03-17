@@ -1,4 +1,4 @@
-import hy.lang.importer
+import hy
 from app import app
 
 if __name__ == '__main__':
