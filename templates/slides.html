@@ -233,7 +233,7 @@
 <div class="step wide-step" data-rotate="180" data-x="1500" data-y="6500" >
     <div class = 'repl' >(import sys)
 
-(print (index sys.argv 1))
+(print (get sys.argv 1))
 </div>
 </div>
 <!--
@@ -250,7 +250,7 @@
 
  -->
 <div class="step wide-step" data-rotate="180" data-x="0" data-y="6500" >
-    <div class = 'repl' >(if (== 1 2)
+    <div class = 'repl' >(if (= 1 2)
   (print "This is the 'true' branch")
   (print "This is the 'false' branch"))
 
@@ -287,13 +287,13 @@
     Given the following code block:
 
 <div class = 'lisp' >(def foo [1 2 3 4])
-(print (index foo 100))  ; out of bounds</div>
+(print (get foo 100))  ; out of bounds</div>
 
     Even more magic, like proper tracebacks, totally work.
 
 <div class = 'python' >Traceback (most recent call last)
   File "frob.hy", line 4, in module
-    (print (index foo 100))  ; out of bounds
+    (print (get foo 100))  ; out of bounds
 IndexError</div>
 </div>
 <!--
