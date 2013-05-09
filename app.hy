@@ -1,16 +1,15 @@
 ; Copyright (c) Paul R. Tagliamonte <tag@pault.ag>, 2013 under the terms of
 ; hy.
 
-(import-from flask
-             Flask render-template request)
+(import [flask [ Flask render-template request]])
 
-(import-from pygments highlight)
-(import-from pygments.lexers PythonLexer ClojureLexer)
-(import-from pygments.formatters HtmlFormatter)
+(import [pygments [highlight]])
+(import [pygments.lexers [PythonLexer ClojureLexer]])
+(import [pygments.formatters [HtmlFormatter]])
 
-(import-from hy.importer import-string-to-ast)
-(import astor.codegen)
-(import autopep8)
+(import [hy.importer [import-buffer-to-ast]])
+(import [astor.codegen])
+(import [autopep8])
 
 (def lexers {"python" (PythonLexer)
              "lisp"   (ClojureLexer)})
@@ -19,7 +18,7 @@
 (def app (Flask "__main__"))  ; long story, needed hack
 
 
-(decorate-with (.route app "/")
+(with-decorator (.route app "/")
   (defn index []
     "Entry point"
     (render-template "slides.html")))
@@ -30,23 +29,23 @@
 
 
 (defn hy-to-py [hython]
-  (.to_source astor.codegen (import-string-to-ast hython)))
+  (.to_source astor.codegen (import-buffer-to-ast hython)))
 
 
-(decorate-with (kwapply (.route app "/format/<language>") {"methods" ["POST"]})
+(with-decorator (kwapply (.route app "/format/<language>") {"methods" ["POST"]})
   (defn format-code [language]
     "Language HTML Formatter"
     (highlight
       (get request.form "code") (get lexers language) (HtmlFormatter))))
 
 
-(decorate-with (kwapply (.route app "/hy2py") {"methods" ["POST"]})
+(with-decorator (kwapply (.route app "/hy2py") {"methods" ["POST"]})
   (defn translate-code []
     "Pythonic converter"
     (hy-to-py (get request.form "code"))))
 
 
-(decorate-with (kwapply (.route app "/hy2pycol") {"methods" ["POST"]})
+(with-decorator (kwapply (.route app "/hy2pycol") {"methods" ["POST"]})
   (defn translate-code-with-color []
     "Pythonic converter"
     (colorize-python (hy-to-py (get request.form "code")))))
